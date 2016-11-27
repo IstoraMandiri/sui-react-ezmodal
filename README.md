@@ -28,14 +28,17 @@ class NetworkConfig extends Component {
         // optional data to be passed to content & actions
         data={{ name: 'bobby' }}
         // required content element with props passed
-        content={({ formData, change }) => {
-          <Form.Group widths="equal">
-            <Button type="submit" className="hidden" />
-            <Form.Field>
-              <label>Provider Name</label>
-              <Input onChange={change} value={formData.name || ''} name="name" />
-            </Form.Field>
-          </Form.Group>
+        // `data` is original passed data, `formData` is component state for controlled inputs
+        content={({ data, formData, change }) => {
+          return (
+            <Form.Group widths="equal">
+              <Button type="submit" className="hidden" />
+              <Form.Field>
+                <label>Provider Name</label>
+                <Input onChange={change} value={formData.name || ''} name="name" />
+              </Form.Field>
+            </Form.Group>
+          );
         }}
         // optional actions, hide/submit event handlers passed as props
         actions={({ hide, submit }) => {
