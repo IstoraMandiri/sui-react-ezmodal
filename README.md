@@ -9,7 +9,7 @@ Now in react land (`semantic-ui-react` land specifically), there was a need for 
 ### Install
 
 ```bash
-npm install --save sui-react-ez-modal
+npm install --save sui-react-ezmodal
 ```
 
 ### Usage
