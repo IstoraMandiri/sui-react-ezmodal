@@ -39,6 +39,7 @@ export default class EZModal extends Component {
     };
     return (
       <Modal
+        {...this.props}
         trigger={trigger}
         open={showing}
         onOpen={() => handleShowToggle(true)}
@@ -59,8 +60,8 @@ export default class EZModal extends Component {
             this.renderCompOrFunc(actions, childProps)
           :
             [
-              <Button key="close" icon="remove" content="Cancel" floated="left" onClick={hide} />,
-              <Button key="submit" icon="checkmark" content="OK" color="green" onClick={handleSubmit} />,
+              <Button key="close" content="Cancel" onClick={hide} />,
+              <Button key="submit" positive icon="checkmark" labelPosition="right" content="OK" onClick={handleSubmit} />,
             ]
           }
         </Modal.Actions>
