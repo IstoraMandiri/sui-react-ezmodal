@@ -10,7 +10,9 @@ export default class EZModal extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleShowToggle(showing) {
-    this.setState({ showing });
+    const update = { showing };
+    if (showing) { update.formData = this.props.data || {}; }
+    this.setState(update);
   }
   handleChange(e) {
     this.setState({ formData: { ...this.state.formData, [e.target.name]: e.target.value } });
@@ -26,7 +28,11 @@ export default class EZModal extends Component {
     return typeof compOrFunc === 'function' ? compOrFunc(props) : compOrFunc;
   }
   render() {
-    const { data, trigger, header, content, actions } = this.props;
+    const {
+      data, trigger, header, content, actions,
+      handleRemove, removeHeader, removeContent,
+      ...modalProps,
+    } = this.props;
     const { showing, formData } = this.state;
     const { handleChange, handleSubmit, handleShowToggle } = this;
     const hide = () => handleShowToggle(false);
@@ -37,9 +43,34 @@ export default class EZModal extends Component {
       change: handleChange,
       submit: handleSubmit,
     };
+    const defaultButtons = [
+      <Button key="close" content="Cancel" onClick={hide} />,
+      <Button key="submit" positive icon="checkmark" labelPosition="right" content="OK" onClick={handleSubmit} />,
+    ];
+    if (handleRemove) {
+      defaultButtons.unshift(
+        <EZModal
+          key="delete"
+          size="small"
+          header={removeHeader || 'Please Confirm'}
+          content={removeContent || 'Are you sure you wish to remove?'}
+          handleSubmit={() => { handleRemove(formData); hide(); }}
+          trigger={
+            <Button
+              negative
+              icon="trash"
+              labelPosition="left"
+              key="delete"
+              content="Remove"
+              style={{ float: 'left', marginLeft: '0' }}
+            />
+          }
+        />
+      );
+    }
     return (
       <Modal
-        {...this.props}
+        {...modalProps}
         trigger={trigger}
         open={showing}
         onOpen={() => handleShowToggle(true)}
@@ -59,10 +90,7 @@ export default class EZModal extends Component {
           {actions ?
             this.renderCompOrFunc(actions, childProps)
           :
-            [
-              <Button key="close" content="Cancel" onClick={hide} />,
-              <Button key="submit" positive icon="checkmark" labelPosition="right" content="OK" onClick={handleSubmit} />,
-            ]
+            defaultButtons
           }
         </Modal.Actions>
       </Modal>
@@ -71,10 +99,13 @@ export default class EZModal extends Component {
 }
 
 EZModal.propTypes = {
+  trigger: PropTypes.object.isRequired,
   data: PropTypes.object,
   header: PropTypes.string,
-  actions: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-  content: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
-  trigger: PropTypes.object.isRequired,
+  content: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  actions: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   handleSubmit: PropTypes.func,
+  handleRemove: PropTypes.func,
+  removeHeader: PropTypes.string,
+  removeContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
 };

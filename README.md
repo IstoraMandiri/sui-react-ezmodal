@@ -51,6 +51,12 @@ class NetworkConfig extends Component {
         header="This is my new Modal"
         // callback function after submit
         handleSubmit={(data) => console.log(data)}
+        // optional delete button, instead of `actions`
+        handleRemove={(data) => console.log('deleting!', data)}
+        removeHeader="Are you sure?"
+        removeContent={(data) => {
+          return <p>Really remove {data.name}?</p>
+        }}
       />
     );
   }
