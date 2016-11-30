@@ -97,13 +97,15 @@ export default class EZModal extends Component {
             this.renderCompOrFunc(content, childProps)
           }
         </Modal.Content>
-        <Modal.Actions>
-          {actions ?
-            this.renderCompOrFunc(actions, childProps)
-          :
-            defaultButtons
-          }
-        </Modal.Actions>
+        {actions !== false &&
+          <Modal.Actions>
+            {actions ?
+              this.renderCompOrFunc(actions, childProps)
+            :
+              defaultButtons
+            }
+          </Modal.Actions>
+        }
       </Modal>
     );
   }
@@ -116,7 +118,7 @@ EZModal.propTypes = {
   onClose: PropTypes.func,
   header: PropTypes.string,
   content: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  actions: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  actions: PropTypes.oneOfType([PropTypes.node, PropTypes.func, PropTypes.bool]),
   handleSubmit: PropTypes.func,
   handleRemove: PropTypes.func,
   removeHeader: PropTypes.string,
