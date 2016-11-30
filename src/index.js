@@ -26,12 +26,13 @@ export default class EZModal extends Component {
   handleSubmit(e) {
     e.preventDefault();
     if (this.props.handleSubmit) {
-      this.handlePromiseOrFunc(this.props.handleSubmit(this.state.formData)).then((res) => {
+      return this.handlePromiseOrFunc(this.props.handleSubmit(this.state.formData)).then((res) => {
         if (res !== false) {
           this.handleShowToggle(false);
         }
       });
     }
+    return this.handleShowToggle(false);
   }
   renderCompOrFunc(compOrFunc, props) {
     return typeof compOrFunc === 'function' ? compOrFunc(props) : compOrFunc;
