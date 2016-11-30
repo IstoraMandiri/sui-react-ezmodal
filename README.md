@@ -40,6 +40,8 @@ class NetworkConfig extends Component {
             </Form.Group>
           );
         }}
+        // optional bool to show spinner overlay
+        loading
         // optional actions, hide/submit event handlers passed as props
         actions={({ hide, submit }) => {
           return [
@@ -49,7 +51,7 @@ class NetworkConfig extends Component {
         }}
         // optional title header
         header="This is my new Modal"
-        // callback function after submit
+        // callback function after submit. if you return a promise, it will resolve before closing
         handleSubmit={(data) => console.log(data)}
         // optional delete button, instead of `actions`
         handleRemove={(data) => console.log('deleting!', data)}

@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Button, Form, Dimmer, Loader } from 'semantic-ui-react';
 
 export default class EZModal extends Component {
   constructor(props) {
@@ -8,6 +8,12 @@ export default class EZModal extends Component {
     this.handleShowToggle = this.handleShowToggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handlePromiseOrFunc(promiseOrFunc) {
+    if (promiseOrFunc && typeof promiseOrFunc.then === 'function') {
+      return promiseOrFunc;
+    }
+    return new Promise((resolve) => resolve(promiseOrFunc));
   }
   handleShowToggle(showing) {
     const update = { showing };
@@ -20,16 +26,19 @@ export default class EZModal extends Component {
   handleSubmit(e) {
     e.preventDefault();
     if (this.props.handleSubmit) {
-      this.props.handleSubmit(this.state.formData);
+      this.handlePromiseOrFunc(this.props.handleSubmit(this.state.formData)).then((res) => {
+        if (res !== false) {
+          this.handleShowToggle(false);
+        }
+      });
     }
-    this.handleShowToggle(false);
   }
   renderCompOrFunc(compOrFunc, props) {
     return typeof compOrFunc === 'function' ? compOrFunc(props) : compOrFunc;
   }
   render() {
     const {
-      data, trigger, header, content, actions,
+      data, trigger, header, content, actions, onClose,
       handleRemove, removeHeader, removeContent,
       ...modalProps,
     } = this.props;
@@ -74,8 +83,9 @@ export default class EZModal extends Component {
         trigger={trigger}
         open={showing}
         onOpen={() => handleShowToggle(true)}
-        onClose={() => handleShowToggle(false)}
+        onClose={() => { handleShowToggle(false); onClose && onClose(); }}
       >
+        {this.props.loading && <Dimmer active inverted><Loader content={this.props.loading} /></Dimmer>}
         {header && <Modal.Header>{header}</Modal.Header>}
         <Modal.Content>
           {this.props.handleSubmit ? // only use a form if we expect a submit
@@ -100,7 +110,9 @@ export default class EZModal extends Component {
 
 EZModal.propTypes = {
   trigger: PropTypes.object.isRequired,
+  loading: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   data: PropTypes.object,
+  onClose: PropTypes.func,
   header: PropTypes.string,
   content: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   actions: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
