@@ -7,7 +7,7 @@ export default class EZModal extends Component {
     this.state = { showing: false, formData: this.props.data || {} };
     this.handleShowToggle = this.handleShowToggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleThisSubmit = this.handleThisSubmit.bind(this);
   }
   handlePromiseOrFunc(promiseOrFunc) {
     if (promiseOrFunc && typeof promiseOrFunc.then === 'function') {
@@ -23,7 +23,7 @@ export default class EZModal extends Component {
   handleChange(e) {
     this.setState({ formData: { ...this.state.formData, [e.target.name]: e.target.value } });
   }
-  handleSubmit(e) {
+  handleThisSubmit(e) {
     e.preventDefault();
     if (this.props.handleSubmit) {
       return this.handlePromiseOrFunc(this.props.handleSubmit(this.state.formData)).then((res) => {
@@ -35,27 +35,31 @@ export default class EZModal extends Component {
     return this.handleShowToggle(false);
   }
   renderCompOrFunc(compOrFunc, props) {
+    // hide if not showing for less buggery
+    if (!this.state.showing) { return null; }
     return typeof compOrFunc === 'function' ? compOrFunc(props) : compOrFunc;
   }
   render() {
     const {
-      data, trigger, header, content, actions, onClose,
-      handleRemove, removeHeader, removeContent,
+      data, trigger, header, content, actions, onClose, handleRemove, removeHeader, removeContent,
+      /* eslint-disable no-unused-vars */
+      handleSubmit, loading, // plucked so we can pass modalProps
+      /* eslint-enable no-unused-vars */
       ...modalProps,
     } = this.props;
     const { showing, formData } = this.state;
-    const { handleChange, handleSubmit, handleShowToggle } = this;
+    const { handleChange, handleThisSubmit, handleShowToggle } = this;
     const hide = () => handleShowToggle(false);
     const childProps = {
       data,
       formData,
       hide,
       change: handleChange,
-      submit: handleSubmit,
+      submit: handleThisSubmit,
     };
     const defaultButtons = [
       <Button key="close" content="Cancel" onClick={hide} />,
-      <Button key="submit" positive icon="checkmark" labelPosition="right" content="OK" onClick={handleSubmit} />,
+      <Button key="submit" positive icon="checkmark" labelPosition="right" content="OK" onClick={handleThisSubmit} />,
     ];
     if (handleRemove) {
       defaultButtons.unshift(
@@ -84,13 +88,13 @@ export default class EZModal extends Component {
         trigger={trigger}
         open={showing}
         onOpen={() => handleShowToggle(true)}
-        onClose={() => { handleShowToggle(false); onClose && onClose(); }}
+        onClose={() => { handleShowToggle(false); if (onClose) { onClose(); } }}
       >
         {this.props.loading && <Dimmer active inverted><Loader content={this.props.loading} /></Dimmer>}
         {header && <Modal.Header>{header}</Modal.Header>}
         <Modal.Content>
           {this.props.handleSubmit ? // only use a form if we expect a submit
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleThisSubmit}>
               {this.renderCompOrFunc(content, childProps)}
             </Form>
           :
