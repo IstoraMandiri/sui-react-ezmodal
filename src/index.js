@@ -41,7 +41,13 @@ export default class EZModal extends Component {
   }
   render() {
     const {
-      data, trigger, header, content, actions, onClose, handleRemove, removeHeader, removeContent,
+      data,
+      trigger,
+      header, content,
+      actions, onClose,
+      handleRemove, removeHeader, removeContent,
+      noCloseButton, noSubmitButton,
+      closeButtonText, submitButtonText,
       /* eslint-disable no-unused-vars */
       handleSubmit, loading, // plucked so we can pass modalProps
       /* eslint-enable no-unused-vars */
@@ -58,30 +64,9 @@ export default class EZModal extends Component {
       submit: handleThisSubmit,
     };
     const defaultButtons = [
-      <Button key="close" content="Cancel" onClick={hide} />,
-      <Button key="submit" positive icon="checkmark" labelPosition="right" content="OK" onClick={handleThisSubmit} />,
+      !noCloseButton && <Button key="close" content={closeButtonText || 'Cancel'} onClick={hide} />,
+      !noSubmitButton && <Button key="submit" positive icon="checkmark" labelPosition="right" content={submitButtonText || 'OK'} onClick={handleThisSubmit} />,
     ];
-    if (handleRemove) {
-      defaultButtons.unshift(
-        <EZModal
-          key="delete"
-          size="small"
-          header={removeHeader || 'Please Confirm'}
-          content={removeContent || 'Are you sure you wish to remove?'}
-          handleSubmit={() => { handleRemove(formData); hide(); }}
-          trigger={
-            <Button
-              negative
-              icon="trash"
-              labelPosition="left"
-              key="delete"
-              content="Remove"
-              style={{ float: 'left', marginLeft: '0' }}
-            />
-          }
-        />
-      );
-    }
     return (
       <Modal
         {...modalProps}
@@ -103,6 +88,25 @@ export default class EZModal extends Component {
         </Modal.Content>
         {actions !== false &&
           <Modal.Actions>
+            {handleRemove &&
+              <EZModal
+                key="delete"
+                size="small"
+                header={removeHeader || 'Please Confirm'}
+                content={removeContent || 'Are you sure you wish to remove?'}
+                handleSubmit={() => { handleRemove(formData); hide(); }}
+                trigger={
+                  <Button
+                    negative
+                    icon="trash"
+                    labelPosition="left"
+                    key="delete"
+                    content="Remove"
+                    style={{ float: 'left', marginLeft: '0' }}
+                  />
+                }
+              />
+            }
             {actions ?
               this.renderCompOrFunc(actions, childProps)
             :
@@ -127,4 +131,8 @@ EZModal.propTypes = {
   handleRemove: PropTypes.func,
   removeHeader: PropTypes.string,
   removeContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  noCloseButton: PropTypes.bool,
+  noSubmitButton: PropTypes.bool,
+  closeButtonText: PropTypes.string,
+  submitButtonText: PropTypes.string,
 };
