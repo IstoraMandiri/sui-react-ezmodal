@@ -63,9 +63,13 @@ export default class EZModal extends Component {
       change: handleChange,
       submit: handleThisSubmit,
     };
+    const notShowingClosed = typeof noCloseButton === 'function' ? noCloseButton(childProps) : noCloseButton;
+    const notShowingSubmit = typeof noSubmitButton === 'function' ? noSubmitButton(childProps) : noSubmitButton;
+    const submitButtonContent = typeof submitButtonText === 'function' ? submitButtonText(childProps) : submitButtonText;
+    const closeButtonContent = typeof closeButtonText === 'function' ? closeButtonText(childProps) : closeButtonText;
     const defaultButtons = [
-      !noCloseButton && <Button key="close" content={closeButtonText || 'Cancel'} onClick={hide} />,
-      !noSubmitButton && <Button key="submit" positive icon="checkmark" labelPosition="right" content={submitButtonText || 'OK'} onClick={handleThisSubmit} />,
+      !notShowingClosed && <Button key="close" content={closeButtonContent || 'Cancel'} onClick={hide} />,
+      !notShowingSubmit && <Button key="submit" positive icon="checkmark" labelPosition="right" content={submitButtonContent || 'OK'} onClick={handleThisSubmit} />,
     ];
     return (
       <Modal
@@ -131,8 +135,8 @@ EZModal.propTypes = {
   handleRemove: PropTypes.func,
   removeHeader: PropTypes.string,
   removeContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-  noCloseButton: PropTypes.bool,
-  noSubmitButton: PropTypes.bool,
-  closeButtonText: PropTypes.string,
-  submitButtonText: PropTypes.string,
+  noCloseButton: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  noSubmitButton: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  closeButtonText: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  submitButtonText: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 };
