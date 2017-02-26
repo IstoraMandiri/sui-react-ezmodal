@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { Modal, Button, Form, Dimmer, Loader } from 'semantic-ui-react';
+import { Icon, Message, Modal, Button, Form, Dimmer, Loader } from 'semantic-ui-react';
 
 export default class EZModal extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ export default class EZModal extends Component {
       noCloseButton, noSubmitButton,
       closeButtonText, submitButtonText,
       /* eslint-disable no-unused-vars */
-      handleSubmit, loading, // plucked so we can pass modalProps
+      handleSubmit, loading, error, errorHeader, // plucked so we can pass modalProps
       /* eslint-enable no-unused-vars */
       ...modalProps,
     } = this.props;
@@ -76,6 +76,7 @@ export default class EZModal extends Component {
       !notShowingClosed && <Button key="close" content={closeButtonContent || 'Cancel'} onClick={hide} />,
       !notShowingSubmit && <Button key="submit" positive icon="checkmark" labelPosition="right" content={submitButtonContent || 'OK'} onClick={handleThisSubmit} />,
     ];
+    const loaderContent = typeof loading === 'boolean' ? undefined : loading;
     return (
       <Modal
         {...modalProps}
@@ -84,12 +85,21 @@ export default class EZModal extends Component {
         onOpen={() => handleShowToggle(true)}
         onClose={() => { handleShowToggle(false); if (onClose) { onClose(); } }}
       >
-        {this.props.loading && <Dimmer active inverted><Loader content={this.props.loading} /></Dimmer>}
+        {loading && <Dimmer active inverted><Loader content={loaderContent} /></Dimmer>}
         {header && <Modal.Header>{header}</Modal.Header>}
         <Modal.Content>
           {this.props.handleSubmit ? // only use a form if we expect a submit
-            <Form onSubmit={handleThisSubmit}>
+            <Form onSubmit={handleThisSubmit} error={!!error}>
               {this.renderCompOrFunc(content, childProps)}
+              {error &&
+                <Message icon error>
+                  <Icon name="warning sign" />
+                  <Message.Content>
+                    <Message.Header>{errorHeader || 'Oops, something went wrong'}</Message.Header>
+                    {`${error}`}
+                  </Message.Content>
+                </Message>
+              }
             </Form>
           :
             this.renderCompOrFunc(content, childProps)
@@ -132,6 +142,8 @@ EZModal.propTypes = {
   trigger: PropTypes.object.isRequired,
   loading: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   data: PropTypes.object,
+  error: PropTypes.any,
+  errorHeader: PropTypes.string,
   onClose: PropTypes.func,
   header: PropTypes.string,
   content: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
