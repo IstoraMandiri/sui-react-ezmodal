@@ -23,6 +23,7 @@ export default class EZModal extends Component {
   }
   handleResetFormData() {
     this.setState({ formData: this.props.data });
+    if (this.props.onReset) { this.props.onReset(); }
   }
   handleChange(e) {
     this.setState({ formData: { ...this.state.formData, [e.target.name]: e.target.value } });
@@ -59,7 +60,7 @@ export default class EZModal extends Component {
     } = this.props;
     const { showing, formData } = this.state;
     const { handleChange, handleThisSubmit, handleShowToggle, handleResetFormData } = this;
-    const hide = () => handleShowToggle(false);
+    const hide = () => { handleShowToggle(false); if (onClose) { onClose(); } };
     const childProps = {
       data,
       formData,
@@ -74,7 +75,7 @@ export default class EZModal extends Component {
     const closeButtonContent = typeof closeButtonText === 'function' ? closeButtonText(childProps) : closeButtonText;
     const defaultButtons = [
       !notShowingClosed && <Button key="close" content={closeButtonContent || 'Cancel'} onClick={hide} />,
-      !notShowingSubmit && <Button key="submit" positive icon="checkmark" labelPosition="right" content={submitButtonContent || 'OK'} onClick={handleThisSubmit} />,
+      !notShowingSubmit && <Button type="submit" key="submit" positive icon="checkmark" labelPosition="right" content={submitButtonContent || 'OK'} onClick={handleThisSubmit} />,
     ];
     const loaderContent = typeof loading === 'boolean' ? undefined : loading;
     return (
@@ -83,7 +84,7 @@ export default class EZModal extends Component {
         trigger={trigger}
         open={showing}
         onOpen={() => handleShowToggle(true)}
-        onClose={() => { handleShowToggle(false); if (onClose) { onClose(); } }}
+        onClose={hide}
       >
         {loading && <Dimmer active inverted><Loader content={loaderContent} /></Dimmer>}
         {header && <Modal.Header>{header}</Modal.Header>}
@@ -145,6 +146,7 @@ EZModal.propTypes = {
   error: PropTypes.any,
   errorHeader: PropTypes.string,
   onClose: PropTypes.func,
+  onReset: PropTypes.func,
   header: PropTypes.string,
   content: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   actions: PropTypes.oneOfType([PropTypes.node, PropTypes.func, PropTypes.bool]),
