@@ -8,6 +8,7 @@ export default class EZModal extends Component {
     this.handleShowToggle = this.handleShowToggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleThisSubmit = this.handleThisSubmit.bind(this);
+    this.handleResetFormData = this.handleResetFormData.bind(this);
   }
   handlePromiseOrFunc(promiseOrFunc) {
     if (promiseOrFunc && typeof promiseOrFunc.then === 'function') {
@@ -19,6 +20,9 @@ export default class EZModal extends Component {
     const update = { showing };
     if (showing) { update.formData = this.props.data || {}; }
     this.setState(update);
+  }
+  handleResetFormData() {
+    this.setState({ formData: this.props.data });
   }
   handleChange(e) {
     this.setState({ formData: { ...this.state.formData, [e.target.name]: e.target.value } });
@@ -54,12 +58,13 @@ export default class EZModal extends Component {
       ...modalProps,
     } = this.props;
     const { showing, formData } = this.state;
-    const { handleChange, handleThisSubmit, handleShowToggle } = this;
+    const { handleChange, handleThisSubmit, handleShowToggle, handleResetFormData } = this;
     const hide = () => handleShowToggle(false);
     const childProps = {
       data,
       formData,
       hide,
+      resetFormData: handleResetFormData,
       change: handleChange,
       submit: handleThisSubmit,
     };

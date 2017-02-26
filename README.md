@@ -29,13 +29,14 @@ class NetworkConfig extends Component {
         data={{ name: 'bobby' }}
         // required content element with props passed
         // `data` is original passed data, `formData` is component state for controlled inputs
-        content={({ data, formData, change }) => {
+        content={({ data, formData, change, resetFormData }) => {
           return (
             <Form.Group widths="equal">
               <Button type="submit" className="hidden" />
               <Form.Field>
                 <label>Provider Name</label>
                 <Input onChange={change} value={formData.name || ''} name="name" />
+                <Button onClick={resetFormData} text="Reset" />
               </Form.Field>
             </Form.Group>
           );
