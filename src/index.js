@@ -12,6 +12,7 @@ export default class EZModal extends Component {
     this.handleSetFormData = this.handleSetFormData.bind(this);
     this.handleSetError = this.handleSetError.bind(this);
     this.handleSetLoading = this.handleSetLoading.bind(this);
+    this.handleHide = this.handleHide.bind(this);
   }
   handlePromiseOrFunc(promiseOrFunc) {
     if (promiseOrFunc && typeof promiseOrFunc.then === 'function') {
@@ -47,11 +48,15 @@ export default class EZModal extends Component {
     if (this.props.handleSubmit) {
       return this.handlePromiseOrFunc(this.props.handleSubmit(this.state.formData)).then((res) => {
         if (res !== false) {
-          this.handleShowToggle(false);
+          this.handleHide();
         }
       });
     }
-    return this.handleShowToggle(false);
+    return this.handleHide();
+  }
+  handleHide() {
+    if (this.props.onClose) { this.props.onClose(); }
+    this.handleShowToggle(false);
   }
   renderCompOrFunc(compOrFunc, props) {
     // hide if not showing for less buggery
@@ -82,7 +87,7 @@ export default class EZModal extends Component {
       handleResetFormData,
       handleSetLoading,
     } = this;
-    const hide = () => { if (onClose) { onClose(); } handleShowToggle(false); };
+    const hide = this.handleHide;
     const childProps = {
       data,
       formData,

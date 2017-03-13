@@ -23,13 +23,14 @@ class NetworkConfig extends Component {
   render() {
     return (
       <EZModal
+        initiallyOpens // initially open?
         // required trigger element
         trigger={<Button basic icon="plus" content="Do Something Cool" />}
         // optional data to be passed to content & actions
         data={{ name: 'bobby' }}
         // required content element with props passed
         // `data` is original passed data, `formData` is component state for controlled inputs
-        content={({ data, formData, change, resetFormData }) => {
+        content={({ data, formData, change, resetFormData, setError, setLoading }) => {
           return (
             <Form.Group widths="equal">
               <Button type="submit" className="hidden" />
