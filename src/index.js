@@ -14,6 +14,19 @@ export default class EZModal extends Component {
     this.handleSetLoading = this.handleSetLoading.bind(this);
     this.handleHide = this.handleHide.bind(this);
   }
+  // TODO REMOVE THIS HACK
+  // https://github.com/Semantic-Org/Semantic-UI-React/issues/1157
+  componentWillUpdate() {
+    this.fixBody();
+  }
+  componentDidUpdate() {
+    this.fixBody();
+  }
+  fixBody() {
+    const anotherModal = document.getElementsByClassName('ui page modals').length;
+    if (anotherModal > 0) document.body.classList.add('scrolling', 'dimmable', 'dimmed');
+  }
+  // END HACK
   handlePromiseOrFunc(promiseOrFunc) {
     if (promiseOrFunc && typeof promiseOrFunc.then === 'function') {
       return promiseOrFunc;
@@ -68,12 +81,12 @@ export default class EZModal extends Component {
       data,
       trigger,
       header, content,
-      actions, onClose,
+      actions,
       handleRemove, removeHeader, removeContent,
       noCloseButton, noSubmitButton,
       closeButtonText, submitButtonText,
       /* eslint-disable no-unused-vars */
-      handleSubmit, loading, error, errorHeader, initiallyOpen, // plucked so we can pass otherProps
+      handleSubmit, loading, error, errorHeader, initiallyOpen, onClose, // plucked so we can pass otherProps
       /* eslint-enable no-unused-vars */
       ...otherProps,
     } = this.props;
