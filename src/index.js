@@ -48,7 +48,9 @@ export default class EZModal extends Component {
     if (this.props.onReset) { this.props.onReset(); }
   }
   handleChange(e) {
-    this.setState({ formData: { ...this.state.formData, [e.target.name]: e.target.value } });
+    const name = e.target ? e.target.name : e.name;
+    const value = e.target ? e.target.value : e.value;
+    this.setState({ formData: { ...this.state.formData, [name]: value } });
   }
   handleSetError(error, errorHeader) {
     this.setState({ error, errorHeader: error && errorHeader });
@@ -88,7 +90,7 @@ export default class EZModal extends Component {
       /* eslint-disable no-unused-vars */
       handleSubmit, loading, error, errorHeader, initiallyOpen, onClose, // plucked so we can pass otherProps
       /* eslint-enable no-unused-vars */
-      ...otherProps,
+      ...otherProps
     } = this.props;
     const { showing, formData } = this.state;
     const {
@@ -107,7 +109,7 @@ export default class EZModal extends Component {
       hide,
       setFormData: handleSetFormData,
       resetFormData: handleResetFormData,
-      change: handleChange,
+      formChange: handleChange,
       submit: handleThisSubmit,
       setError: handleSetError,
       setLoading: handleSetLoading,

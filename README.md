@@ -14,6 +14,8 @@ npm install --save sui-react-ezmodal
 
 ### Usage
 
+See `index.js` for the full component spec
+
 ```javascript
 import React, { PropTypes, Component } from 'react';
 import { Grid, Segment, Button, Header } from 'semantic-ui-react';
