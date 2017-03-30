@@ -87,6 +87,7 @@ export default class EZModal extends Component {
       handleRemove, removeHeader, removeContent,
       noCloseButton, noSubmitButton,
       closeButtonText, submitButtonText,
+      disableHiddenSubmitButton,
       /* eslint-disable no-unused-vars */
       handleSubmit, loading, error, errorHeader, initiallyOpen, onClose, // plucked so we can pass otherProps
       /* eslint-enable no-unused-vars */
@@ -139,6 +140,7 @@ export default class EZModal extends Component {
         <Modal.Content>
           {this.props.handleSubmit ? // only use a form if we expect a submit
             <Form onSubmit={handleThisSubmit}>
+              {!disableHiddenSubmitButton && <button type="submit" style={{ position: 'absolute', visibility: 'hidden' }} />}
               {this.renderCompOrFunc(content, childProps)}
             </Form>
           :
@@ -207,4 +209,5 @@ EZModal.propTypes = {
   noSubmitButton: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
   closeButtonText: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   submitButtonText: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  disableHiddenSubmitButton: PropTypes.bool,
 };
