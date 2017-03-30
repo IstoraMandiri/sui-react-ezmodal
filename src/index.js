@@ -61,11 +61,14 @@ export default class EZModal extends Component {
   handleThisSubmit(e) {
     e.preventDefault();
     if (this.props.handleSubmit) {
-      return this.handlePromiseOrFunc(this.props.handleSubmit(this.state.formData)).then((res) => {
-        if (res !== false) {
-          this.handleHide();
-        }
-      });
+      try {
+        return this.handlePromiseOrFunc(this.props.handleSubmit(this.state.formData)).then((res) => {
+          if (res !== false) { this.handleHide(); }
+        }).catch((error) => this.handleSetError({ error }));
+      } catch (error) {
+        this.handleSetError({ error });
+        return false;
+      }
     }
     return this.handleHide();
   }
@@ -151,7 +154,7 @@ export default class EZModal extends Component {
               <Icon name="warning sign" />
               <Message.Content>
                 <Message.Header>{activeErrorHeader || 'Oops, something went wrong'}</Message.Header>
-                {`${activeError.message || activeError}`}
+                {`${activeError.message || (activeError.error && activeError.error.message) || activeError.error || activeError}`}
               </Message.Content>
             </Message>
           }
