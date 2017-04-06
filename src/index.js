@@ -122,10 +122,10 @@ export default class EZModal extends Component {
     const notShowingSubmit = typeof noSubmitButton === 'function' ? noSubmitButton(childProps) : noSubmitButton;
     const submitButtonContent = typeof submitButtonText === 'function' ? submitButtonText(childProps) : submitButtonText;
     const closeButtonContent = typeof closeButtonText === 'function' ? closeButtonText(childProps) : closeButtonText;
-    const defaultButtons = [
+    const defaultButtons = (handleSubmit || handleRemove) ? [
       !notShowingClosed && <Button key="close" content={closeButtonContent || 'Cancel'} onClick={hide} />,
       !notShowingSubmit && <Button type="submit" key="submit" positive icon="checkmark" labelPosition="right" content={submitButtonContent || 'OK'} onClick={handleThisSubmit} />,
-    ];
+    ] : <Button content={closeButtonContent || 'Done'} onClick={hide} />;
     const activeLoading = loading || this.state.loading;
     const loaderContent = typeof activeLoading === 'boolean' ? undefined : activeLoading;
     const activeError = error || this.state.error;
