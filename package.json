@@ -1,6 +1,6 @@
 {
   "name": "sui-react-ezmodal",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "EASY Semantic UI React Modals",
   "author": "Chris Hitchcott <hitchcott@gmail.com> (http://hitchcott.com)",
   "main": "lib/index.js",

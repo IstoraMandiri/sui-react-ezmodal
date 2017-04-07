@@ -118,6 +118,7 @@ export default class EZModal extends Component {
       setError: handleSetError,
       setLoading: handleSetLoading,
     };
+    const headerText = typeof header === 'function' ? header(childProps) : header;
     const notShowingClosed = typeof noCloseButton === 'function' ? noCloseButton(childProps) : noCloseButton;
     const notShowingSubmit = typeof noSubmitButton === 'function' ? noSubmitButton(childProps) : noSubmitButton;
     const submitButtonContent = typeof submitButtonText === 'function' ? submitButtonText(childProps) : submitButtonText;
@@ -139,7 +140,7 @@ export default class EZModal extends Component {
         onClose={hide}
       >
         {activeLoading && <Dimmer active inverted><Loader content={loaderContent} /></Dimmer>}
-        {header && <Modal.Header>{header}</Modal.Header>}
+        {headerText && <Modal.Header>{headerText}</Modal.Header>}
         <Modal.Content>
           {this.props.handleSubmit ? // only use a form if we expect a submit
             <Form onSubmit={handleThisSubmit}>
@@ -201,7 +202,7 @@ EZModal.propTypes = {
   errorHeader: PropTypes.string,
   onClose: PropTypes.func,
   onReset: PropTypes.func,
-  header: PropTypes.string,
+  header: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   content: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   actions: PropTypes.oneOfType([PropTypes.node, PropTypes.func, PropTypes.bool]),
   handleSubmit: PropTypes.func,
