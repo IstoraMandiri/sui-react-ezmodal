@@ -131,6 +131,7 @@ export default class EZModal extends Component {
     const loaderContent = typeof activeLoading === 'boolean' ? undefined : activeLoading;
     const activeError = error || this.state.error;
     const activeErrorHeader = errorHeader || this.state.errorHeader;
+    const activeErrorText = activeError && (activeError.message || (activeError.error && activeError.error.message) || activeError.error || activeError);
     return (
       <Modal
         {...otherProps}
@@ -155,7 +156,7 @@ export default class EZModal extends Component {
               <Icon name="warning sign" />
               <Message.Content>
                 <Message.Header>{activeErrorHeader || 'Oops, something went wrong'}</Message.Header>
-                {`${activeError.message || (activeError.error && activeError.error.message) || activeError.error || activeError}`}
+                {activeErrorText}
               </Message.Content>
             </Message>
           }
@@ -168,6 +169,7 @@ export default class EZModal extends Component {
                 size="small"
                 header={removeHeader || 'Please Confirm'}
                 content={removeContent || 'Are you sure you wish to remove?'}
+                submitButtonText="Confirm"
                 handleSubmit={() => { handleRemove(formData); hide(); }}
                 trigger={
                   <Button

@@ -1,17 +1,15 @@
-{
-  "extends": "airbnb",
-  "env": { "browser": true },
-  "plugins": ["react"],
-  "parser": "babel-eslint",
-  "parserOptions": {
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
-  },
-  "rules": {
-    "prefer-arrow-callback": [0],
-    "arrow-body-style": [0],
-    "max-len": [0],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
-  }
-}
+extends: airbnb
+parser: babel-eslint
+plugins:
+ - react
+env:
+  browser: true
+rules:
+  react/forbid-prop-types:
+    - 0
+  max-len:
+    - 0
+  class-methods-use-this:
+    - 0
+  react/jsx-filename-extension:
+    - 0
