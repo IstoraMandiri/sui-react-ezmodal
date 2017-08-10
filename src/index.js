@@ -73,8 +73,12 @@ export default class EZModal extends Component {
     return this.handleHide();
   }
   handleHide() {
-    if (this.props.onClose) { this.props.onClose(); }
-    this.handleShowToggle(false);
+    if (this.props.onClose) {
+      return this.handlePromiseOrFunc(this.props.onClose(this.state.formData)).then((res) => {
+        if (res !== false) { this.handleShowToggle(false); }
+      });
+    }
+    return this.handleShowToggle(false);
   }
   renderCompOrFunc(compOrFunc, props) {
     // hide if not showing for less buggery
