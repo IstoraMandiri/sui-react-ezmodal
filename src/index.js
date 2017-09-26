@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Icon, Message, Modal, Button, Form, Dimmer, Loader } from 'semantic-ui-react';
 
 export default class EZModal extends Component {
